@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.kcls.mapper.PendingTrialSubscribeMapper">
+	<select id="selectCount" parameterType="com.kcls.bean.Page" resultType="com.kcls.bean.SubScribeBean">
+		select * from kcls_2017_purchase where user_id = #{searchText1} and purchase_title like concat('%',#{searchText},'%')
+	</select>
+	<select id="selectPendingTrialSubscribe" parameterType="com.kcls.bean.Page" resultType="com.kcls.bean.SubScribeBean">
+		select s.*,(select u.user_name from kcls_2017_user u where u.user_id = s.user_id) as user_name,
+			(select c.course_name from kcls_2017_spendingCourse c where c.course_id = s.course_id) 
+				as course_name from kcls_2017_purchase s where s.user_id = #{searchText1} and s.cashier_state = 2 and 
+					s.purchase_title like concat('%',#{searchText},'%') and s.course_id 
+						like concat('%',#{searchText2},'%') limit #{pageNumber},#{pageSize}
+	</select>
+	<update id="revocationPendingTrialSubscribe" parameterType="com.kcls.bean.SubScribeBean">
+		update kcls_2017_purchase set cashier_state = #{cashier_state} where purchase_id = #{purchase_id}
+	</update>
+</mapper>

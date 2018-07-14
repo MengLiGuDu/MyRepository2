@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.kcls.mapper.YearMapper">
+
+	<select id="selectCount" parameterType="com.kcls.bean.Page" resultType="com.kcls.bean.YearBean">
+		select * from kcls_2017_year where year_name like concat('%',#{searchText},'%') 
+	</select>
+	<select id="selectYear" parameterType="com.kcls.bean.Page" resultType="com.kcls.bean.YearBean">
+		select * from kcls_2017_year where year_name like concat('%',#{searchText},'%') limit #{pageNumber},#{pageSize}
+	</select>
+	<delete id="deleteYear" parameterType="com.kcls.bean.YearBean">
+		delete from kcls_2017_year where year_id = #{year_id}
+	</delete>
+	<update id="updateYear" parameterType="com.kcls.bean.YearBean">
+		update kcls_2017_year set year_beginDate = #{year_beginDate},year_finishDate = #{year_finishDate},
+		year_name = #{year_name} where year_id = #{year_id}
+	</update>
+	<select id="selectJudgeYear" parameterType="com.kcls.bean.YearBean" resultType="com.kcls.bean.YearBean">
+		select * from kcls_2017_year where year_id = #{year_id}
+	</select>
+	<insert id="insertYear" parameterType="com.kcls.bean.YearBean">
+		insert into kcls_2017_year(year_id,year_beginDate,year_finishDate,year_name,create_name,create_date) 
+		values(#{year_id},#{year_beginDate},#{year_finishDate},#{year_name},#{create_name},#{create_date});
+	</insert>
+</mapper>

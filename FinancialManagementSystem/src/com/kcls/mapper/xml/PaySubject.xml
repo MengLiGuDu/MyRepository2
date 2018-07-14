@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.kcls.mapper.PaySubjectMapper">
+	<select id="selectCount" parameterType="com.kcls.bean.Page" resultType="com.kcls.bean.PaySubjectBean">
+		select * from kcls_2017_spendingCourse where course_name like concat('%',#{searchText},'%')
+	</select>
+	<select id="selectPaySubject" parameterType="com.kcls.bean.Page" resultType="com.kcls.bean.PaySubjectBean">
+		select s.*,(select s1.course_name from kcls_2017_spendingCourse s1 where 
+			s1.course_id = s.fatherCourse_id) as fatherCourse_name from kcls_2017_spendingCourse s 
+				where s.course_name like concat('%',#{searchText},'%') limit #{pageNumber},#{pageSize}
+	</select>
+	<insert id="insertPaySubject" parameterType="com.kcls.bean.PaySubjectBean">
+		insert into kcls_2017_spendingCourse values(#{course_id},#{fatherCourse_id},#{course_name},
+			#{course_remark},#{create_name},#{create_date})
+	</insert>
+	<delete id="deletePaySubject" parameterType="com.kcls.bean.PaySubjectBean">
+		delete from kcls_2017_spendingCourse where course_id = #{course_id}
+	</delete>
+	<update id="updatePaySubject" parameterType="com.kcls.bean.PaySubjectBean">
+		update kcls_2017_spendingCourse set fatherCourse_id = #{fatherCourse_id},
+			course_name = #{course_name},course_remark = #{course_remark} where course_id = #{course_id}
+	</update>
+	<select id="allFatherPaySubject" resultType="com.kcls.bean.PaySubjectBean">
+		select * from kcls_2017_spendingCourse where fatherCourse_id is null
+	</select>
+	<select id="allTwoPaySubject" resultType="com.kcls.bean.PaySubjectBean">
+		select * from kcls_2017_spendingCourse where fatherCourse_id  is not null
+	</select>
+	<select id="SonPaySubject" parameterType="com.kcls.bean.PaySubjectBean" resultType="com.kcls.bean.PaySubjectBean">
+		select * from kcls_2017_spendingCourse where fatherCourse_id = #{course_id}
+	</select>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.kcls.mapper.MySubScribeDraftMapper">
+	<select id="paySubjectTree" resultType="com.kcls.bean.NodeBean">
+		select s.course_id as node_id, s.course_name as text, (select s1.course_id 
+			from kcls_2017_spendingCourse s1 where s1.course_id = s.fatherCourse_id) as 
+				parent_id from kcls_2017_spendingCourse s
+	</select>
+	<insert id="insertSubScribeDraft" parameterType="com.kcls.bean.SubScribeBean">
+		insert into kcls_2017_purchase values(#{purchase_id},#{user_id},
+			#{purchase_title},#{course_id},#{purchase_money},#{collection_account},
+				#{purchase_date},#{purchase_matter},#{deal_type},#{cashier_state})
+	</insert>
+	<select id="selectCount" parameterType="com.kcls.bean.Page" resultType="com.kcls.bean.SubScribeBean">
+		select * from kcls_2017_purchase where user_id = #{searchText1} and purchase_title like concat('%',#{searchText},'%')
+	</select>
+	<select id="selectSubscribeDraft" parameterType="com.kcls.bean.Page" resultType="com.kcls.bean.SubScribeBean">
+		select s.*,(select u.user_name from kcls_2017_user u where u.user_id = s.user_id) as user_name,
+			(select c.course_name from kcls_2017_spendingCourse c where c.course_id = s.course_id) 
+				as course_name from kcls_2017_purchase s where s.user_id = #{searchText1} and s.cashier_state = 0 and 
+					s.purchase_title like concat('%',#{searchText},'%') and s.course_id 
+						like concat('%',#{searchText2},'%') limit #{pageNumber},#{pageSize}
+	</select>
+	<delete id="deleteSubscribeDraft" parameterType="com.kcls.bean.SubScribeBean">
+		delete from kcls_2017_purchase where purchase_id = #{purchase_id}
+	</delete>
+	<update id="submitSubscribeDraft" parameterType="com.kcls.bean.SubScribeBean">
+		update kcls_2017_purchase set cashier_state = #{cashier_state} where purchase_id = #{purchase_id}
+	</update>
+	<update id="updateSubscribeDraft" parameterType="com.kcls.bean.SubScribeBean">
+		update kcls_2017_purchase set course_id = #{course_id},purchase_title = #{purchase_title},
+			purchase_money = #{purchase_money},purchase_matter = #{purchase_matter} where purchase_id = #{purchase_id}
+	</update>
+	<select id="MySubscribeDraft_Detail" parameterType="com.kcls.bean.SubScribeBean" 
+			resultType="com.kcls.bean.SubScribeBean">
+		select s.*,(select u.user_name from kcls_2017_user u where u.user_id = s.user_id) as user_name,
+			(select c.course_name from kcls_2017_spendingCourse c where c.course_id = s.course_id) 
+				as course_name from kcls_2017_purchase s where s.purchase_id = #{purchase_id}
+	</select>
+</mapper>
